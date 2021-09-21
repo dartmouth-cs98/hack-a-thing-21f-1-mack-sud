@@ -32,3 +32,21 @@ function randomFiftyFifty () {
     const ranStrokeColor = floor(random(0, PALETTE.length))
     return PALETTE[ranStrokeColor]
   }
+
+// Simple lines to see whether we understand randomization 
+function testLines () {
+    const numShapes = randomFiftyFifty() ? SIDES : SIDES * 2
+    const strokeColor = getRandomFromPalette()
+  
+    noFill()
+    push()
+      translate(width/2, height/2)
+      ellipse(0, 0, CRYSTAL_SIZE, CRYSTAL_SIZE)
+      stroke(strokeColor)
+      const angle = 360 / numShapes
+      for (let i = 0; i < numShapes; i++) {
+        line(0, 0, CRYSTAL_SIZE /2)
+        rotate (angle)
+      }
+    pop()
+  }
