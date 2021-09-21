@@ -1,14 +1,18 @@
+// Grid line up, for uniform designs
 const CRYSTAL_SIZE = 500
 const SIDES = 6
+
+// Pallete array for different colors
 let PALETTE = []
 
 function setup() {
   // put setup code here
   createCanvas(530, 530, SVG)
 
+  // Two colors we will be using for the generated crystals
   PALETTE = [
-    color (255, 52, 154),
-    color (4, 0, 152),
+    color (255, 52, 154), // pink
+    color (4, 0, 152),    // blue
   ]
 
   noLoop()
@@ -23,6 +27,7 @@ function draw() {
   // simpleLines()
   // drawCircles()
 
+  // For Random combos
   let picker = random(1)
   if (picker > 0.3) {
     outlineShape()
@@ -39,6 +44,7 @@ function draw() {
   }
 }
 
+// Draws smaller circles around the canvas
 function drawCircles () {
   const numShapes = SIDES
   const angle = 360 / numShapes
@@ -57,6 +63,7 @@ function drawCircles () {
   pop()
 }
 
+// Outlines our shape, can either be a hexagon or a circle
 function outlineShape () {
   const strokeColor = getRandomFromPalette()
   const weight = randomFiftyFifty() ? 1 : 3
@@ -75,6 +82,7 @@ function outlineShape () {
   pop()
 }
 
+// Makes lines that start from a specific point on a circle, a random fraction of the radius away and then stops at the end, also a choice
 function simpleLines () {
   const stepsOut = 8
   const numSteps = randomFiftyFifty() ? stepsOut : int(stepsOut * 1.25)
@@ -100,6 +108,7 @@ function simpleLines () {
   pop()
 }
 
+// Simple lines to see whether we understand randomization 
 function testLines () {
   const numShapes = randomFiftyFifty() ? SIDES : SIDES * 2
   const strokeColor = getRandomFromPalette()
@@ -116,16 +125,3 @@ function testLines () {
   pop()
 }
 
-function randomFiftyFifty () {
-  const randomNum = random(1)
-  if (randomNum > 0.5) {
-    return true
-  } else {
-    return false
-  }
-}
-
-function getRandomFromPalette () {
-  const ranStrokeColor = floor(random(0, PALETTE.length))
-  return PALETTE[ranStrokeColor]
-}
