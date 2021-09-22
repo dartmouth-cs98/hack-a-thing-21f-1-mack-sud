@@ -1,3 +1,5 @@
+
+// Draws a hexagon with the help of point on circle function
 function hexagon (posX, posY, radius) {                     
     const rotAngle = 360 / 6
     beginShape()
@@ -7,9 +9,103 @@ function hexagon (posX, posY, radius) {
     }
     endShape(CLOSE)
 }
-  
+ 
+// Finds a point on a circle circumference based on x, y, radius and angle
 function pointOnCircle (posX, posY, radius, angle) {         
     const x = posX + radius * cos(angle)
     const y = posY + radius * sin(angle)
     return createVector(x, y)
 }
+
+// Choosing the number of sides
+function randomFiftyFifty () {
+    const randomNum = random(1)
+    if (randomNum > 0.5) {
+      return true
+    } else {
+      return false
+    }
+  }
+  
+  // Function for choosing a random color from our palette
+  function getRandomFromPalette () {
+    const ranStrokeColor = floor(random(0, PALETTE.length))
+    return PALETTE[ranStrokeColor]
+  }
+
+// Simple lines to see whether we understand randomization 
+function testLines () {
+    const numShapes = randomFiftyFifty() ? SIDES : SIDES * 2
+    const strokeColor = getRandomFromPalette()
+  
+    noFill()
+    push()
+      translate(width/2, height/2)
+      ellipse(0, 0, CRYSTAL_SIZE, CRYSTAL_SIZE)
+      stroke(strokeColor)
+      const angle = 360 / numShapes
+      for (let i = 0; i < numShapes; i++) {
+        line(0, 0, CRYSTAL_SIZE /2)
+        rotate (angle)
+      }
+    pop()
+}
+
+function myTriangle (center, radius, direction) {
+    if (direction) {
+        beginShape();
+        vertex(center + radius * cos(0), radius * sin(0));
+        vertex(center + radius * cos(120), radius * sin(120));
+        vertex(center + radius * cos(240), radius * sin(240));
+        endShape(CLOSE); 
+    } else {
+        beginShape();
+        vertex(center + radius * cos(180), radius * sin(180));
+        vertex(center + radius * cos(300), radius * sin(300));
+        vertex(center + radius * cos(60), radius * sin(60));
+        endShape(CLOSE);
+    }
+  }
+
+  const allLayers = [
+      {
+          name: "Outline Shapes",
+          init: () => new OutlineShape(),
+          weight: 0.3
+      },
+      {
+        name: "CenteredShape",
+        init: () => new CenteredShape(),
+        weight: 0.3
+      },
+      {
+        name: "Circles",
+        init: () => new Circles(),
+        weight: 0.3
+      },
+      {
+        name: 'Simple Lines',
+        init: () => new SimpleLines(),
+        weight: 0.3
+      },
+      {
+        name: 'Dotted Lines',
+        init: () => new DottedLines(),
+        weight: 0.3
+      },
+      {
+        name: 'Shapes Ring',
+        init: () => new ShapesRing(),
+        weight: 0.3
+      },
+      {
+        name: 'Layered Hexagons',
+        init: () => new LayeredHexagons(),
+        weight: 0.6
+      },
+      {
+        name: 'Test Lines',
+        init: () => new TestLines(),
+        weight: 1
+      }
+  ]
