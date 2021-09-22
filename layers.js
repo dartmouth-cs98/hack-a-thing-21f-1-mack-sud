@@ -1,198 +1,203 @@
-// The big boy class for all shapes
-class Layer {
+const state = {
+    sides: SIDES,
+    crystal_size: CRYSTAL_SIZE,
+    stepsOut: 8,
+    thinStroke: 1,
+    thickStroke: 3
+}
 
-    // Constructor
-    constructor() {
-        this.sides = SIDES
-        this.crystal_size = CRYSTAL_SIZE
-        this.numShapes = this.sides
-        this.angle = 360/this.numShapes
-        this.stepsOut = 8
-        this.singleStep = (this.crystal_size / 2) / this.stepsOut
-        this.thinStroke = 1
-        this.thickStroke = 3
-        this.layerColor = getRandomFromPalette()
-    }
+const setState = (state) => {
+    state.numShapes = state.sides,
+    state.angle = 360 / state.numShapes,
+    state.singleStep = (state.crystal_size / 2) / state.stepsOut,
+    state.layerColor = getRandomFromPalette()
+    return state
 }
 
 // For some random smaller circles on our canvas
-class Circles extends Layer {
-    constructor() {
-        super()
-        this.shapeSize = (this.crystal_size / 2) * .93
-        this.position = (this.crystal_size / 2) - (this.shapeSize / 2)
-    }
+const circles = (state) => {
+    state.shapeSize = (state.crystal_size / 2) * .93
+    state.position = (state.crystal_size / 2) - (state.shapeSize / 2)
 
-    render() {
-        noFill()
-        stroke(this.layerColor)
-        strokeWeight(1)
-        push()
-        for (let i = 0; i < this.numShapes; i++) {
-            ellipse(this.position, 0, this.shapeSize, this.shapeSize)
-            rotate(this.angle)
+    return ({
+        name: 'Circles',
+        state,
+        render: () => {
+            noFill()
+            stroke(state.layerColor)
+            strokeWeight(1)
+            push()
+            for (let i = 0; i < state.numShapes; i++) {
+                ellipse(state.position, 0, state.shapeSize, state.shapeSize)
+                rotate(state.angle)
+            }
+            pop()
         }
-        pop()
-    }
+    })
 }
 
 // For some simple lines starting a certain n steps out and ending a certain greater n steps out
-class SimpleLines extends Layer {
-    constructor() {
-        super()
-        this.numSteps = randomFiftyFifty() ? this.stepsOut : int(this.stepsOut * 1.25)
-        this.step = (this.crystal_size / 2) / this.numSteps
-        this.start = floor(random(0, this.numSteps))
-        this.stop = floor(random(this.start, this.numSteps + 1))
-        this.weight = randomFiftyFifty() ? this.thinStroke : this.thickStroke
-        this.numShapes = randomFiftyFifty() ? this.sides : this.sides * 2
-        this.angle = 360 / this.numShapes
-    }
+const simpleLines = (state) => {
+    state.numSteps = randomFiftyFifty() ? state.stepsOut : int(state.stepsOut * 1.25)
+    state.step = (state.crystal_size / 2) / state.numSteps
+    state.start = floor(random(0, state.numSteps))
+    state.stop = floor(random(state.start, state.numSteps + 1))
+    state.weight = randomFiftyFifty() ? state.thinStroke : state.thickStroke
+    state.numShapes = randomFiftyFifty() ? state.sides : state.sides * 2
+    state.angle = 360 / state.numShapes
 
-    render() {
-        noFill()
-        stroke(this.layerColor)
-        strokeWeight(this.weight)
-        push()
-            for (let i = 0; i < this.numShapes; i++) {
-                line(this.start * this.step, 0, this.stop * this.step, 0)  
-                rotate(this.angle)
-            }
-        pop()
-    }
+    return ({
+        name: 'Simple Lines',
+        state,
+        render: () => {
+            noFill()
+            stroke(state.layerColor)
+            strokeWeight(state.weight)
+            push()
+                for (let i = 0; i < state.numShapes; i++) {
+                    line(state.start * state.step, 0, state.stop * state.step, 0)  
+                    rotate(state.angle)
+                }
+            pop()
+        }
+    })
 }
 
 // Outlines our shape, can either be a hexagon or a circle
-class OutlineShape extends Layer {
-    constructor() {
-        super()
-        this.weight = randomFiftyFifty() ? 1 : 3
-        this.isHexagon = randomFiftyFifty()
-    }
+const outlineShape = (state) => {
+    state.weight = randomFiftyFifty() ? 1 : 3
+    state.isHexagon = randomFiftyFifty()
 
-    render() {
-        stroke(this.layerColor)
-        strokeWeight(this.weight)
-        push()
-        if (this.isHexagon) {
-            hexagon(0, 0, this.crystal_size / 2)
-        } else {
-            ellipse(0, 0, this.crystal_size, this.crystal_size)
+    return ({
+        name: 'Outline Shape',
+        state,
+        render: () => {
+            stroke(state.layerColor)
+            strokeWeight(state.weight)
+            push()
+            if (state.isHexagon) {
+                hexagon(0, 0, state.crystal_size / 2)
+            } else {
+                ellipse(0, 0, state.crystal_size, state.crystal_size)
+            }
+            pop()  
         }
-        pop()  
-    }
+    })
 }
 
 // Dotted lines, very similar to simple lines, just drawing small rectangles with an offset instead
-class DottedLines extends Layer {
-    constructor() {
-        super()
-        this.numShapes = randomFiftyFifty() ? this.sides : this.sides * 2
-        this.angle = 360 / this.numShapes
-        this.shapeSize = 3
-        this.centerOffset = this.singleStep
-    }
+const dottedLines = (state) => {
+    state.numShapes = randomFiftyFifty() ? state.sides : state.sides * 2
+    state.angle = 360 / state.numShapes
+    state.shapeSize = 3
+    state.centerOffset = state.singleStep
 
-    render () {
-        fill(this.layerColor)
-        noStroke()
-        push()
-        for(let i = 0; i <= this.numShapes; i++) {
-            for(let x = this.centerOffset; x < CRYSTAL_SIZE / 2; x += this.singleStep) {
-                rect(x, 0, this.shapeSize, this.shapeSize)
+    return ({
+        name: 'Dotted Lines',
+        state,
+        render: () => {
+            fill(state.layerColor)
+            noStroke()
+            push()
+            for(let i = 0; i <= state.numShapes; i++) {
+                for(let x = state.centerOffset; x < CRYSTAL_SIZE / 2; x += state.singleStep) {
+                    rect(x, 0, state.shapeSize, state.shapeSize)
+                }
+              rotate(state.angle)
             }
-          rotate(this.angle)
-        }
-        pop()
-      }
-
+            pop()
+          }
+    })
 }
 
 // Draws a flat out shape on the canvas with fill!
-class CenteredShape extends Layer {                     
-    constructor () {
-        super()
-        this.randomShape = random(1)
-        this.shapeSize = floor(random(this.stepsOut / 2, this.stepsOut - 2)) * this.singleStep
-    }
+const centeredShape = (state) => {                     
+    state.randomShape = random(1)
+    state.shapeSize = floor(random(state.stepsOut / 2, state.stepsOut - 2)) * state.singleStep
   
-    render () {
-        fill(this.layerColor)
-        noStroke()
-        push()
-
-        if (this.randomShape < 0.1) {
-            rect(0, 0, this.shapeSize * 2, this.shapeSize * 2)
-        } else if (this.randomShape >= 0.1 && this.randomShape < 0.6) {
-            ellipse(0, 0, this.shapeSize * 2, this.shapeSize * 2)
-        } else if (this.randomShape >= 0.6) {
-            rotate(this.angle / 2) 
-            hexagon(0, 0, this.shapeSize)
+    return ({
+        name: 'Centered Shape',
+        state,
+        render: () => {
+            fill(state.layerColor)
+            noStroke()
+            push()
+    
+            if (state.randomShape < 0.1) {
+                rect(0, 0, state.shapeSize * 2, state.shapeSize * 2)
+            } else if (state.randomShape >= 0.1 && state.randomShape < 0.6) {
+                ellipse(0, 0, state.shapeSize * 2, state.shapeSize * 2)
+            } else if (state.randomShape >= 0.6) {
+                rotate(state.angle / 2) 
+                hexagon(0, 0, state.shapeSize)
+            }
+          pop()
         }
-      pop()
-    }
+    })
 }
 
 // A random ring of shapes in a random direction. Very fun
-class ShapesRing extends Layer {                    
-    constructor () {
-        super()
-        this.steps = floor(random(1, this.stepsOut))
-        this.center = this.steps * this.singleStep
-        this.randomShape = random(1)
-        this.orientation = randomFiftyFifty()
-        this.fillColor = randomFiftyFifty() ? this.layerColor : color(0, 1)
-        this.weight = randomFiftyFifty() ? this.thinStroke : this.thickStroke
-    
-        // For the sake of radius overlapping
-        if (this.steps < this.stepsOut / 2) {
-            this.radius = floor(random(1, this.steps)) * this.singleStep
-        } else if (this.steps > this.stepsOut / 2) {
-            this.radius = floor(random(1, this.stepsOut - this.steps)) * this.singleStep
-        } else {
-            this.radius = floor(random(1, (this.stepsOut / 2) + 1)) * this.singleStep
-        }
+const shapesRing = (state) => {                    
+    state.steps = floor(random(1, state.stepsOut))
+    state.center = state.steps * state.singleStep
+    state.randomShape = random(1)
+    state.orientation = randomFiftyFifty()
+    state.fillColor = randomFiftyFifty() ? state.layerColor : color(0, 1)
+    state.weight = randomFiftyFifty() ? state.thinStroke : state.thickStroke
+
+    // For the sake of radius overlapping
+    if (state.steps < state.stepsOut / 2) {
+        state.radius = floor(random(1, state.steps)) * state.singleStep
+    } else if (state.steps > state.stepsOut / 2) {
+        state.radius = floor(random(1, state.stepsOut - state.steps)) * state.singleStep
+    } else {
+        state.radius = floor(random(1, (state.stepsOut / 2) + 1)) * state.singleStep
     }
   
-    render () {
-        stroke(this.layerColor)
-        fill(this.fillColor)
-        strokeWeight(this.weight)
-        push()
-        for (let i = 0; i < this.numShapes; i++) {
-            if (this.randomShape < 0.33) {
-                ellipse(0, this.center, this.radius, this.radius)
-            } else if (this.randomShape >= 0.33 && this.randomShape < 0.66) {
-                rect(0, this.center, this.radius, this.radius)
-            } else if (this.randomShape >= 0.66) {
-                myTriangle(this.center, this.radius, this.orientation)
+    return ({
+        name: 'Shapes Ring',
+        state,
+        render: () => {
+            stroke(state.layerColor)
+            fill(state.fillColor)
+            strokeWeight(state.weight)
+            push()
+            for (let i = 0; i < state.numShapes; i++) {
+                if (state.randomShape < 0.33) {
+                    ellipse(0, state.center, state.radius, state.radius)
+                } else if (state.randomShape >= 0.33 && state.randomShape < 0.66) {
+                    rect(0, state.center, state.radius, state.radius)
+                } else if (state.randomShape >= 0.66) {
+                    myTriangle(state.center, state.radius, state.orientation)
+                }
+                rotate(state.angle)
             }
-            rotate(this.angle)
+            pop()
         }
-        pop()
-    }
+    })
 }
 
 // Cool lil layer of hexagons, starts a certain x steps out and ends a certain y steps out.
-class LayeredHexagons extends Layer {                 
-    constructor () {
-        super()
-        this.numSteps = randomFiftyFifty() ? this.stepsOut : this.stepsOut * 1.25
-        this.centerOffset = (CRYSTAL_SIZE / 2) * 0.15
-        this.singleStep = ((CRYSTAL_SIZE / 2) - this.centerOffset) / this.numSteps
-        this.weight = randomFiftyFifty() ? this.thinStroke : this.thickStroke
-    }
+const layeredHexagons = (state) => {                 
+    state.numSteps = randomFiftyFifty() ? state.stepsOut : state.stepsOut * 1.25
+    state.centerOffset = (CRYSTAL_SIZE / 2) * 0.15
+    state.singleStep = ((CRYSTAL_SIZE / 2) - state.centerOffset) / state.numSteps
+    state.weight = randomFiftyFifty() ? state.thinStroke : state.thickStroke
   
-    render () {
-        stroke(this.layerColor)
-        noFill()
-        strokeWeight(this.weight)
-        push()
-        rotate(this.angle / 2) 
-        for (let i = 1; i < this.numSteps + 1; i++) {
-            hexagon(0, 0, this.centerOffset + (i * this.singleStep))
+    return ({
+        name: 'Layered Hexagons',
+        state,
+        render: () => {
+            stroke(state.layerColor)
+            noFill()
+            strokeWeight(state.weight)
+            push()
+            rotate(state.angle / 2) 
+            for (let i = 1; i < state.numSteps + 1; i++) {
+                hexagon(0, 0, state.centerOffset + (i * state.singleStep))
+            }
+            pop()
         }
-        pop()
-    }
+    })
 }
 

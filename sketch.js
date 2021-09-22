@@ -41,13 +41,14 @@ function draw() {
     for (let y = 0; y < ROWS; y++) {
       const crystalX = MARGIN + (x * GRID)
       const crystalY = MARGIN + (y * GRID)
-      allCrystals.push(new Crystal(crystalX, crystalY))
+      const crystal = makeCrystal({x: crystalX, y: crystalY})
+      allCrystals.push(crystal)
     }
   }
 
 
   allCrystals.forEach(crystal => {
-    crystal.render()
+    drawCrystal(crystal)
   });
 }
 
