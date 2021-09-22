@@ -1,6 +1,7 @@
 // Grid line up, for uniform designs
-const CRYSTAL_SIZE = 150
+const CRYSTAL_SIZE = 100
 const SIDES = 6
+const SPACING = 110
 
 // Pallete array for different colors
 let PALETTE = []
@@ -19,10 +20,7 @@ allCrystals = []
 
 
 function setup() {
-  const gridX = MARGIN + GRID * COLUMNS
-  const gridY = MARGIN + GRID * ROWS
-  // put setup code here
-  createCanvas(gridX, gridY, SVG)
+  createCanvas(displayWidth, displayHeight, SVG)
 
   // Two colors we will be using for the generated crystals
   PALETTE = [
@@ -36,26 +34,11 @@ function setup() {
 }
 
 function draw() {
-
-  for (let x = 0; x < COLUMNS; x++) {
-    for (let y = 0; y < ROWS; y++) {
-      const crystalX = MARGIN + (x * GRID)
-      const crystalY = MARGIN + (y * GRID)
-      const crystal = makeCrystal({x: crystalX, y: crystalY})
-      allCrystals.push(crystal)
+  clear()
+  for (let x = 0; x < displayWidth; x += SPACING) {
+    for (let y = 0; y < displayHeight; y += SPACING) {
+      const crystal = makeCrystal({x: x, y: y})
+      drawCrystal(crystal)
     }
   }
-
-
-  allCrystals.forEach(crystal => {
-    drawCrystal(crystal)
-  });
 }
-
-
-
-
-
-
-
-
