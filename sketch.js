@@ -24,8 +24,11 @@ function setup() {
 
   // Two colors we will be using for the generated crystals
   PALETTE = [
-    color (255, 52, 154), // pink
-    color (4, 0, 152),    // blue
+    color(230, 57, 70),
+    color(241, 250, 238),
+    color(168, 218, 220),
+    color(69, 123, 157),
+    color(29, 53, 87)
   ]
 
   noLoop()

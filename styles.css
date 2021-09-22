@@ -1,0 +1,27 @@
+div {
+  display: flex;
+  justify-content: center;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+a {
+  background-color: #1e1e1e;
+  box-shadow: 0 5px 0 black;
+  color: white;
+  padding: 1em 1.5em;
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin-left: .1em;
+  margin-right: .1em;
+}
+
+a:hover {
+  background-color: #131212;
+}
+
+a:active {
+  box-shadow: none;
+  top: 5px;
+}
