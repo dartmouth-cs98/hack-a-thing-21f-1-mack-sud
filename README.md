@@ -7,8 +7,11 @@
 
 We built a generative artwork. Every time you refresh the page, a new set of "crystals" appears, each one generated according to a set of rules and some randomness. You can download an instance of the art as an svg.
 
-Include some screenshots.
-[How?](https://help.github.com/articles/about-readmes/#relative-links-and-image-paths-in-readme-files)
+Include some screenshots. Crystals, Topographical maps, and some Flow Fields
+![Crystals](images/crystals.png)
+![Crystals](images/topomap.png)
+![Crystals](images/flowfield1.png)
+![Crystals](images/flowfield2.png)
 
 ## Who Did What?
 
